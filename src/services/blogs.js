@@ -30,6 +30,14 @@ const update = async (newObject, token) => {
   return format(result.data)
 }
 
+const remove = async (id, token) => {
+  await axios.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `bearer ${token}`
+    }
+  })
+}
+
 const format = (blog) => ({...blog, likes: blog.likes || 0})
 
-export default { getAll, create, update }
+export default { getAll, create, update, remove }

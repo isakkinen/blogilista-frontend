@@ -82,6 +82,17 @@ const App = () => {
     .catch(error => setError('whoops:' + error))
   }
 
+  const handleRemove = (blog) => {
+    if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
+      blogService.remove(blog.id, user.token)
+      .then(() => {
+        setSuccess(`removed '${blog.title}' by ${blog.author}`)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      })
+      .catch(error => setError('whoops:' + error))
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -97,7 +108,7 @@ const App = () => {
       <Message message={message}/>
       <Logout user={user} handleLogout={handleLogout}/>
       <h2>blogs</h2>
-      <Blogs blogs={blogs} handleLike={handleLike}/>
+      <Blogs blogs={blogs} handleLike={handleLike} handleRemove={handleRemove}/>
       <Togglable ref={createBlogRef} buttonLabel='New blog'>
         <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} />
       </Togglable>
