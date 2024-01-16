@@ -10,13 +10,8 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
 
   const setError = (message) => {
@@ -51,8 +46,6 @@ const App = () => {
     loginService.login({username, password}).then(user => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user))
       setSuccess(`logged in as ${user.username}`)
-      setUsername("")
-      setPassword("")
       setUser(user)
     })
     .catch(error => {
@@ -89,7 +82,7 @@ const App = () => {
       <div>
         <Message message={message}/>
         <h2>Login</h2>
-        <Login handleSubmit={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>
+        <Login handleSubmit={handleLogin} />
       </div>
     )
   }
@@ -101,7 +94,7 @@ const App = () => {
       <h2>blogs</h2>
       <Blogs blogs={blogs}/>
       <Togglable ref={createBlogRef} buttonLabel='New blog'>
-        <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl}/>
+        <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} />
       </Togglable>
     </div>
   )
