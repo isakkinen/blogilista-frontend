@@ -1,4 +1,4 @@
-const CreateBlog = ({handleSubmit, title, setTitle, author, setAuthor, url, setUrl}) => {
+const CreateBlog = ({handleSubmit, handleCancel, title, setTitle, author, setAuthor, url, setUrl}) => {
     return (
         <div className="create">
             <h2>Add a new blog</h2>
@@ -10,6 +10,7 @@ const CreateBlog = ({handleSubmit, title, setTitle, author, setAuthor, url, setU
                 url <input value={url} onChange={(event) => setUrl(event.target.value)}></input>
                 <br></br>
                 <button type="submit">Add</button>
+                <button type="reset" onClick={handleCancel}>Cancel</button>
             </form>
         </div>
     );

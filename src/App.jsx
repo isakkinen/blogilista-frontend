@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
@@ -6,6 +6,7 @@ import Logout from './components/Logout'
 import Blogs from './components/Blogs'
 import CreateBlog from './components/CreateBlog'
 import Message from './components/Message'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -67,12 +68,14 @@ const App = () => {
     setUser(null)
   }
 
+  const createBlogRef = useRef()
+  
   const handleNewBlog = (event, title, author, url) => {
     event.preventDefault()
+    createBlogRef.current.toggleVisibility()
     const newBlog = { title, author, url }
     blogService.create(newBlog, user.token)
     .then(returnedBlog => {
-      console.log(blogs.concat(returnedBlog))
       setSuccess(`a new blog '${title}' by ${author} added`)
       setBlogs(blogs.concat(returnedBlog))
       setTitle('')
@@ -97,7 +100,9 @@ const App = () => {
       <Logout user={user} handleLogout={handleLogout}/>
       <h2>blogs</h2>
       <Blogs blogs={blogs}/>
-      <CreateBlog handleSubmit={handleNewBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl}/>
+      <Togglable ref={createBlogRef} buttonLabel='New blog'>
+        <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl}/>
+      </Togglable>
     </div>
   )
 }
