@@ -4,12 +4,17 @@ import loginService from './services/login'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import Blogs from './components/Blogs'
+import CreateBlog from './components/CreateBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -43,6 +48,19 @@ const App = () => {
     setUser(null)
   }
 
+  const handleNewBlog = (event, title, author, url) => {
+    event.preventDefault()
+    const newBlog = { title, author, url }
+    blogService.create(newBlog, user.token)
+    .then(returnedBlog => {
+      console.log(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    })
+  } 
+
   if (user === null) {
     return (
       <div>
@@ -57,6 +75,7 @@ const App = () => {
       <Logout user={user} handleLogout={handleLogout}/>
       <h2>blogs</h2>
       <Blogs blogs={blogs}/>
+      <CreateBlog handleSubmit={handleNewBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl}/>
     </div>
   )
 }
