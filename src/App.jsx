@@ -48,12 +48,7 @@ const App = () => {
       setSuccess(`logged in as ${user.username}`)
       setUser(user)
     })
-    .catch(error => {
-      setError(error.response.data.error)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
+    .catch(error => setError(error.response.data.error))
   }
 
   const handleLogout = () => {
@@ -77,6 +72,16 @@ const App = () => {
     })
   } 
 
+  const handleLike = (blog) => {
+    const newBlog = {...blog, likes: blog.likes + 1}
+    blogService.update(newBlog, user.token)
+    .then(returnedBlog => {
+      setSuccess(`liked '${blog.title}' by ${blog.author}`)
+      setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+    })
+    .catch(error => setError('whoops:' + error))
+  }
+
   if (user === null) {
     return (
       <div>
@@ -92,7 +97,7 @@ const App = () => {
       <Message message={message}/>
       <Logout user={user} handleLogout={handleLogout}/>
       <h2>blogs</h2>
-      <Blogs blogs={blogs}/>
+      <Blogs blogs={blogs} handleLike={handleLike}/>
       <Togglable ref={createBlogRef} buttonLabel='New blog'>
         <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} />
       </Togglable>
