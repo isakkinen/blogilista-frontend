@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const CreateBlog = ({ handleSubmit, handleCancel }) => {
     const [title, setTitle] = useState('')
@@ -27,7 +28,12 @@ const CreateBlog = ({ handleSubmit, handleCancel }) => {
                 <button type="reset" onClick={handleCancel}>Cancel</button>
             </form>
         </div>
-    );
+    )
 }
 
-export default CreateBlog;
+CreateBlog.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    handleCancel: PropTypes.func.isRequired,
+}
+
+export default CreateBlog
