@@ -5,6 +5,7 @@ import Login from './components/Login'
 import Logout from './components/Logout'
 import Blogs from './components/Blogs'
 import CreateBlog from './components/CreateBlog'
+import Message from './components/Message'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +16,20 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
+
+  const setError = (message) => {
+    setMessage({message, isError: true})
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+  const setSuccess = (message) => {
+    setMessage({message, isError: false})
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,20 +42,24 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      // set token here!
     }
   }, [])
 
   const handleLogin = async (event, username, password) => {
     event.preventDefault();
-    console.log(username, password)
-    const user = await loginService.login({username, password})
-
-    window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user))
-
-    setUsername("")
-    setPassword("")
-    setUser(user)
+    loginService.login({username, password}).then(user => {
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user))
+      setSuccess(`logged in as ${user.username}`)
+      setUsername("")
+      setPassword("")
+      setUser(user)
+    })
+    .catch(error => {
+      setError(error.response.data.error)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
   }
 
   const handleLogout = () => {
@@ -54,6 +73,7 @@ const App = () => {
     blogService.create(newBlog, user.token)
     .then(returnedBlog => {
       console.log(blogs.concat(returnedBlog))
+      setSuccess(`a new blog '${title}' by ${author} added`)
       setBlogs(blogs.concat(returnedBlog))
       setTitle('')
       setAuthor('')
@@ -64,6 +84,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <Message message={message}/>
         <h2>Login</h2>
         <Login handleSubmit={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>
       </div>
@@ -72,6 +93,7 @@ const App = () => {
 
   return (
     <div>
+      <Message message={message}/>
       <Logout user={user} handleLogout={handleLogout}/>
       <h2>blogs</h2>
       <Blogs blogs={blogs}/>
