@@ -55,5 +55,12 @@ describe('Blog app', () => {
             cy.contains('Cypress')
             cy.get('html').should('not.contain', 'Add a new blog')
         })
+
+        it('A blog can be liked', function() {
+            cy.createBlog({ title: 'A blog created by cypress', author: 'Cypress', url: 'https://example.com' })
+            cy.contains('view').click()
+            cy.contains('like').click()
+            cy.contains('1')
+        })
     })
 })
