@@ -10,7 +10,7 @@ describe('Blog app', () => {
     })
     describe('When first entering page', function() {
         beforeEach(function() {
-            cy.visit('http://localhost:5173')
+            cy.visit('')
         })
 
         it('Login form is shown', function() {
@@ -56,11 +56,24 @@ describe('Blog app', () => {
             cy.get('html').should('not.contain', 'Add a new blog')
         })
 
-        it('A blog can be liked', function() {
-            cy.createBlog({ title: 'A blog created by cypress', author: 'Cypress', url: 'https://example.com' })
-            cy.contains('view').click()
-            cy.contains('like').click()
-            cy.contains('1')
+        describe('When a blog exists', function() {
+            this.beforeEach(function() {
+                cy.createBlog({ title: 'A blog created by cypress', author: 'Cypress', url: 'https://example.com' })
+            })
+
+            it('A blog can be liked', function() {
+                cy.contains('view').click()
+                cy.contains('like').click()
+                cy.contains('1')
+            })
+
+            it('A blog can be removed', function() {
+                cy.contains('view').click()
+                cy.contains('remove').click()
+                cy.get('html').should('not.contain', 'url')
+                cy.get('html').should('not.contain', 'likes')
+                cy.get('html').should('not.contain', 'user')
+            })
         })
     })
 })
