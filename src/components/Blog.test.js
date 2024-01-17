@@ -7,6 +7,8 @@ import Blog from './Blog'
 
 describe('Blog', () => {
     let component = null
+    let handleLike = null
+    let handleRemove = null
 
     beforeEach(() => {
         const blog = {
@@ -21,8 +23,8 @@ describe('Blog', () => {
         }
 
         // Suppress prop type warnings
-        const handleLike = jest.fn()
-        const handleRemove = jest.fn()
+        handleLike = jest.fn()
+        handleRemove = jest.fn()
 
         component = render(<Blog blog={blog} handleLike={handleLike} handleRemove={handleRemove}/>)
     })
@@ -59,5 +61,17 @@ describe('Blog', () => {
 
         const likeButton = component.getByText('like')
         expect(likeButton).toBeDefined()
+    })
+
+    test('clicking like button twice calls event handler twice', async () => {
+        const user = userEvent.setup()
+        const viewButton = component.getByText('view')
+        await user.click(viewButton)
+
+        const likeButton = component.getByText('like')
+        await user.click(likeButton)
+        await user.click(likeButton)
+
+        expect(handleLike.mock.calls).toHaveLength(2)
     })
 })
