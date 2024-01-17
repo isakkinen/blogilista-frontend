@@ -24,7 +24,7 @@ describe('CreateBlog', () => {
 
     test('calls event handler with right details when a new blog is created', async () => {
         const user = userEvent.setup()
-        // const form = component.container.querySelector('form')
+
         const submit = component.container.querySelector('#submit')
         const title = component.container.querySelector('#title')
         const author = component.container.querySelector('#author')
