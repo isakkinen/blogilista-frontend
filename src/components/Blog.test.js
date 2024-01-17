@@ -22,7 +22,6 @@ describe('Blog', () => {
             }
         }
 
-        // Suppress prop type warnings
         handleLike = jest.fn()
         handleRemove = jest.fn()
 
