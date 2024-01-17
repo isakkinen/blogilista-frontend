@@ -30,7 +30,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
 
     return (
         <div style={style}>
-            {blog.title} {blog.author}
+            {blog.title} - {blog.author}
             <button style={{ ...buttonStyle, marginLeft: '5px', marginRight: '5px' }} onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
 
             {visible && (
@@ -39,7 +39,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
                     <div>
                         <strong>Likes:</strong> {blog.likes}
                     </div>
-                    <div><strong>Author:</strong> {blog.author}</div>
+                    <div><strong>User:</strong> {blog.user.username}</div>
                     <button onClick={() => handleLike(blog)} style={buttonStyle}>like</button>
                     <button onClick={() => handleRemove(blog)} style={{ ...buttonStyle, backgroundColor: 'red', marginLeft: '5px', marginRight: '5px' }}>remove</button>
                 </div>
