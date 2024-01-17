@@ -4,9 +4,15 @@ describe('Blog app', () => {
         username: 'tester',
         password: 'salainen'
     }
+    const user2 = {
+        name: 'Another User',
+        username: 'another',
+        password: 'salainen'
+    }
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
         cy.request('POST', 'http://localhost:3003/api/users', user)
+        cy.request('POST', 'http://localhost:3003/api/users', user2)
     })
     describe('When first entering page', function() {
         beforeEach(function() {
@@ -67,12 +73,19 @@ describe('Blog app', () => {
                 cy.contains('1')
             })
 
-            it('A blog can be removed', function() {
+            it('A blog can be removed by the user', function() {
                 cy.contains('view').click()
-                cy.contains('remove').click()
+                cy.get('#remove').click()
                 cy.get('html').should('not.contain', 'url')
                 cy.get('html').should('not.contain', 'likes')
                 cy.get('html').should('not.contain', 'user')
+            })
+
+            it('A blog cannot be removed by another user', function() {
+                cy.contains('logout').click()
+                cy.login({ username: user2.username, password: user2.password })
+                cy.contains('view').click()
+                cy.get('#remove').should('not.exist')
             })
         })
     })

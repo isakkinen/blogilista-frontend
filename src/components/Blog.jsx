@@ -27,6 +27,9 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
     const [visible, setVisible] = useState(false)
 
     const toggleVisibility = () => setVisible(!visible)
+    const user = JSON.parse(window.localStorage.getItem('loggedBlogAppUser'))
+    console.log(user, blog)
+    const showRemove = user && user.username === blog.user.username
 
     return (
         <div style={style}>
@@ -41,7 +44,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
                     </div>
                     <div><strong>User:</strong> {blog.user.username}</div>
                     <button onClick={() => handleLike(blog)} style={buttonStyle}>like</button>
-                    <button onClick={() => handleRemove(blog)} style={{ ...buttonStyle, backgroundColor: 'red', marginLeft: '5px', marginRight: '5px' }}>remove</button>
+                    { showRemove && <button id="remove" onClick={() => handleRemove(blog)} style={{ ...buttonStyle, backgroundColor: 'red', marginLeft: '5px', marginRight: '5px' }}>remove</button> }
                 </div>
             )}
         </div>

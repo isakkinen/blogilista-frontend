@@ -12,7 +12,9 @@ const create = async (newObject, token) => {
             Authorization: `bearer ${token}`
         }
     })
-    return format(request.data)
+
+    const user = JSON.parse(localStorage.getItem('loggedBlogAppUser'))
+    return format({ ...request.data, user })
 }
 
 const update = async (newObject, token) => {
