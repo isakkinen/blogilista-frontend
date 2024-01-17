@@ -104,7 +104,7 @@ const App = () => {
         <div>
             <Message message={message}/>
             <Logout user={user} handleLogout={handleLogout}/>
-            <h2>blogs</h2>
+            <h2>Blogs</h2>
             <Blogs blogs={blogs} handleLike={handleLike} handleRemove={handleRemove}/>
             <Togglable ref={createBlogRef} buttonLabel='New blog'>
                 <CreateBlog handleCancel={() => createBlogRef.current.toggleVisibility()} handleSubmit={handleNewBlog} />

@@ -8,9 +8,9 @@ const Login = ({ handleSubmit }) => {
     return (
         <div>
             <form onSubmit={(event) => handleSubmit(event, username, password)}>
-                username <input value={username} onChange={(event) => setUsername(event.target.value)}></input>
+                username <input id="username" value={username} onChange={(event) => setUsername(event.target.value)}></input>
                 <br></br>
-                password <input type='password' value={password} onChange={(event) => setPassword(event.target.value)}></input>
+                password <input id="password" type='password' value={password} onChange={(event) => setPassword(event.target.value)}></input>
                 <button type="submit">login</button>
             </form>
         </div>
