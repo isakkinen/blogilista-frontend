@@ -7,9 +7,11 @@ describe('Blog app', () => {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
         cy.request('POST', 'http://localhost:3003/api/users', user)
-        cy.visit('http://localhost:5173')
     })
     describe('When first entering page', function() {
+        beforeEach(function() {
+            cy.visit('http://localhost:5173')
+        })
 
         it('Login form is shown', function() {
             cy.contains('Login')
@@ -23,6 +25,7 @@ describe('Blog app', () => {
                 cy.contains('login').click()
 
                 cy.contains('invalid username or password')
+                cy.get('html').should('not.contain', 'Iisakki Säkkinen logged in')
             })
 
             it('proceeds to blog listing when correct credentials are given', function() {
@@ -38,11 +41,19 @@ describe('Blog app', () => {
 
     describe('When logged in', function() {
         beforeEach(function() {
-            cy.visit('http://localhost:5173')
-            cy.get('#username').type(user.username)
-            cy.get('#password').type(user.password)
-            cy.contains('login').click()
+            cy.login({ username: user.username, password: user.password })
         })
 
+        it('A blog can be created', function() {
+            cy.contains('New blog').click()
+            cy.contains('Add a new blog')
+            cy.get('#title').type('A blog created by cypress')
+            cy.get('#author').type('Cypress')
+            cy.get('#url').type('https://example.com')
+            cy.get('#submit').click()
+            cy.contains('A blog created by cypress')
+            cy.contains('Cypress')
+            cy.get('html').should('not.contain', 'Add a new blog')
+        })
     })
 })
