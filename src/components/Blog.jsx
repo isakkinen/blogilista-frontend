@@ -32,7 +32,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
     const showRemove = user && user.username === blog.user.username
 
     return (
-        <div style={style}>
+        <div style={style} className="blog">
             {blog.title} - {blog.author}
             <button style={{ ...buttonStyle, marginLeft: '5px', marginRight: '5px' }} onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
 

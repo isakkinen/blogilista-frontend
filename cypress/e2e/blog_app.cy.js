@@ -63,7 +63,7 @@ describe('Blog app', () => {
         })
 
         describe('When a blog exists', function() {
-            this.beforeEach(function() {
+            beforeEach(function() {
                 cy.createBlog({ title: 'A blog created by cypress', author: 'Cypress', url: 'https://example.com' })
             })
 
@@ -86,6 +86,33 @@ describe('Blog app', () => {
                 cy.login({ username: user2.username, password: user2.password })
                 cy.contains('view').click()
                 cy.get('#remove').should('not.exist')
+            })
+        })
+
+        describe('When multiple blogs exist', function() {
+            beforeEach(function() {
+                cy.createBlog({ title: 'A blog created by cypress', author: 'Cypress', url: 'https://example.com' })
+                cy.createBlog({ title: 'Another blog created by cypress', author: 'Cypress', url: 'https://example.com' })
+                cy.createBlog({ title: 'Yet another blog created by cypress', author: 'Cypress', url: 'https://example.com' })
+            })
+
+            it('Blogs are ordered by likes', function() {
+                cy.get('.blog').eq(0).contains('A blog created by cypress').parent().as('blog1')
+                cy.get('.blog').eq(1).contains('Another blog created by cypress')
+                cy.get('.blog').eq(2).contains('Yet another blog created by cypress')
+
+                cy.get('@blog1').contains('view').click()
+                cy.get('@blog1').contains('like').click()
+
+                cy.get('.blog').eq(1).contains('Another blog created by cypress').as('blog2')
+
+                cy.get('@blog2').contains('view').click()
+                cy.get('@blog2').contains('like').click()
+                cy.get('@blog2').contains('like').click()
+
+                cy.get('.blog').eq(0).contains('Another blog created by cypress')
+                cy.get('.blog').eq(1).contains('A blog created by cypress')
+                cy.get('.blog').eq(2).contains('Yet another blog created by cypress')
             })
         })
     })
